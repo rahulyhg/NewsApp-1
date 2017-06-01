@@ -5,8 +5,6 @@ import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.widget.ImageButton;
-import android.widget.TextView;
 
 import com.destro13.reutersnews.adapter.NewsAdapter;
 import com.destro13.reutersnews.apireuters.ApiController;
@@ -14,13 +12,8 @@ import com.destro13.reutersnews.apireuters.NewsService;
 import com.destro13.reutersnews.model.Article;
 import com.destro13.reutersnews.model.NewsReport;
 import com.destro13.reutersnews.util.StringParser;
-import com.timehop.stickyheadersrecyclerview.StickyRecyclerHeadersDecoration;
 
-import java.text.SimpleDateFormat;
-import java.util.Calendar;
-import java.util.Date;
 import java.util.List;
-import java.util.Locale;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -31,10 +24,7 @@ public class MainActivity extends AppCompatActivity implements SwipeRefreshLayou
     private NewsService mNewsService;
     private NewsReport mNewsReport;
     private RecyclerView mRecyclerView;
-    private TextView mTopStoryTextView;
-    private TextView mDateTextView;
     private SwipeRefreshLayout mSwipeRefreshLayout;
-    private ImageButton mTopStoryImageButton;
 
     private NewsAdapter mNewsAdapter;
 
@@ -43,14 +33,6 @@ public class MainActivity extends AppCompatActivity implements SwipeRefreshLayou
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-
-//        mTopStoryImageButton = (ImageButton) findViewById(R.id.top_story_image_button);
-//        mTopStoryImageButton.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//                mRecyclerView.scrollToPosition(0);
-//            }
-//        });
 
         mRecyclerView = (RecyclerView) findViewById(R.id.reuters_news_recycler_view);
         LinearLayoutManager llm = new LinearLayoutManager(this);
@@ -99,8 +81,12 @@ public class MainActivity extends AppCompatActivity implements SwipeRefreshLayou
                 mNewsAdapter = new NewsAdapter(mNewsReport.getArticles(),MainActivity.this);
                 mRecyclerView.setAdapter(mNewsAdapter);
 
-                final StickyRecyclerHeadersDecoration headersDecor = new StickyRecyclerHeadersDecoration(mNewsAdapter);
-                mRecyclerView.addItemDecoration(headersDecor);
+                RecyclerSectionItemDecoration sectionItemDecoration =
+                        new RecyclerSectionItemDecoration(
+                                getResources().getDimensionPixelSize(R.dimen.recycler_section_header_height),
+                                true,
+                                getSectionCallback(mNewsReport.getArticles()));
+                mRecyclerView.addItemDecoration(sectionItemDecoration);
             }
 
             @Override
@@ -116,17 +102,6 @@ public class MainActivity extends AppCompatActivity implements SwipeRefreshLayou
             article.setPublishedAt(StringParser.setDateInFormat(StringParser.parseDate(article.getPublishedAt())));
         }
         return newsReport;
-    }
-
-
-    private void setDate(){
-        Calendar calendar = Calendar.getInstance();
-        Date date = calendar.getTime();
-        int day = calendar.get(Calendar.DAY_OF_MONTH);
-
-        mDateTextView.setText(new SimpleDateFormat("EEEE", Locale.ENGLISH).format(date.getTime()) + ", ");
-        mDateTextView.append(new SimpleDateFormat("MMMM", Locale.ENGLISH).format(date.getTime()) + " ");
-        mDateTextView.append(Integer.toString(day));
     }
 
     @Override
@@ -153,6 +128,21 @@ public class MainActivity extends AppCompatActivity implements SwipeRefreshLayou
             }
         }, 3000);
     }
+
+    private RecyclerSectionItemDecoration.SectionCallback getSectionCallback(final List<Article> articles) {
+        return new RecyclerSectionItemDecoration.SectionCallback() {
+            @Override
+            public boolean isSection(int position) {
+                return position == 0 || !(articles.get(position).getPublishedAt().equals(articles.get(position - 1).getPublishedAt()));
+            }
+
+            @Override
+            public CharSequence getSectionHeader(int position) {
+                return articles.get(position).getPublishedAt();
+            }
+        };
+    }
+
 
         //FOR TESTING
     private List<Article> setFakeObjects(List<Article> articles){

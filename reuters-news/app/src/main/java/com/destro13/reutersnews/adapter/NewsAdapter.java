@@ -7,14 +7,12 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.destro13.reutersnews.R;
 import com.destro13.reutersnews.model.Article;
 import com.squareup.picasso.Picasso;
-import com.timehop.stickyheadersrecyclerview.StickyRecyclerHeadersAdapter;
 
 import java.util.Collections;
 import java.util.List;
@@ -23,11 +21,9 @@ import java.util.List;
  * Created by pavlyknazariy on 25.05.17.
  */
 
-public class NewsAdapter extends RecyclerView.Adapter<NewsAdapter.NewsHolder> implements StickyRecyclerHeadersAdapter<NewsAdapter.HeaderViewHolder> {
+public class NewsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>  {
     private List<Article> mArticles = Collections.emptyList();
     private Context mContext;
-    private int mLastDatePosition;
-    private int mNewsByDate = 0;
 
     public NewsAdapter(List<Article> articles, Context context) {
         mArticles = articles;
@@ -40,96 +36,36 @@ public class NewsAdapter extends RecyclerView.Adapter<NewsAdapter.NewsHolder> im
     }
 
     @Override
-    public NewsHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        LayoutInflater layoutInflater = LayoutInflater.from(parent.getContext());
-        View view = layoutInflater .inflate(R.layout.item_news, parent, false);
-        return new NewsHolder(view);
+    public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+            LayoutInflater layoutInflater = LayoutInflater.from(parent.getContext());
+            View view = layoutInflater .inflate(R.layout.item_news, parent, false);
+            return new NewsHolder(view);
     }
 
     @Override
-    public void onBindViewHolder(NewsHolder holder, final int position) {
-        Article article = mArticles.get(position);
-        Picasso.with(mContext)
-                .load("http:" + (mArticles.get(position).getUrlToImage()))
-                .into(holder.itemImageView);
+    public void onBindViewHolder(RecyclerView.ViewHolder holder, final int position) {
 
-        holder.titleTextView.setText(article.getTitle());
+            if(holder instanceof NewsHolder){
+            Article article = mArticles.get(position);
+            Picasso.with(mContext)
+                    .load("http:" + (mArticles.get(position).getUrlToImage()))
+                    .into(((NewsHolder) holder).itemImageView);
 
-        View.OnClickListener openInBrowser = new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent browser= new Intent(Intent.ACTION_VIEW, Uri.parse(mArticles.get(position).getUrl()));
-                mContext.startActivity(browser);
-            }
-        };
+            ((NewsHolder) holder).titleTextView.setText(article.getTitle());
 
-        holder.titleTextView.setOnClickListener(openInBrowser);
-        holder.itemImageView.setOnClickListener(openInBrowser);
+            View.OnClickListener openInBrowser = new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Intent browser= new Intent(Intent.ACTION_VIEW, Uri.parse(mArticles.get(position).getUrl()));
+                    mContext.startActivity(browser);
+                }
+            };
 
-    }
-
-    @Override
-    public int getItemViewType(int position) {
-        return super.getItemViewType(position);
-    }
-
-    @Override
-    public long getHeaderId(int position) {
-            if (isDateChanged(position)) {
-             //   mLastDatePosition = position;
-                mNewsByDate = 0;
-                return position ;
-            }
-            else {
-                ++mNewsByDate;
-                return -1;//position;//-1;//mLastDatePosition;
-            }
-    }
-
-    private boolean isDateChanged(int position){
-        if(position == 0)
-            return true;
-
-            if(mArticles.get(position).getPublishedAt().equals(mArticles.get(position - 1).getPublishedAt()))
-                return false;
-
-        return true;
-    }
-
-    @Override
-    public HeaderViewHolder onCreateHeaderViewHolder(ViewGroup parent) {
-        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.header_item, parent, false);
-        return new HeaderViewHolder(view);
-    }
-
-    @Override
-    public void onBindHeaderViewHolder(final HeaderViewHolder holder, final int position) {
-        if (holder instanceof HeaderViewHolder) {
-            if (mArticles.get(position).getPublishedAt() != null) {
-                String header = mArticles.get(position).getPublishedAt();
-                ((HeaderViewHolder) holder).dateHeader.setText(header);
-            }
+            ((NewsHolder) holder).titleTextView.setOnClickListener(openInBrowser);
+            ((NewsHolder) holder).itemImageView.setOnClickListener(openInBrowser);
         }
 
-//        holder.topStoriesButton.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//              //  setData(mArticles);
-//            }
-//        });
 
-    }
-
-    public class HeaderViewHolder extends RecyclerView.ViewHolder {
-
-        TextView dateHeader;
-        ImageButton topStoriesButton;
-
-        public HeaderViewHolder(View view) {
-            super(view);
-            dateHeader = (TextView) view.findViewById(R.id.news_date_textView);
-            topStoriesButton = (ImageButton) view.findViewById(R.id.top_story_image_button);
-        }
     }
 
     @Override
