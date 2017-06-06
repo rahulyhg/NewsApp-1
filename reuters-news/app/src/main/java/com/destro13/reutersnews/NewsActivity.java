@@ -12,6 +12,7 @@ import com.destro13.reutersnews.apinews.ApiController;
 import com.destro13.reutersnews.apinews.NewsService;
 import com.destro13.reutersnews.model.Article;
 import com.destro13.reutersnews.model.NewsReport;
+import com.destro13.reutersnews.mvp.view.NewsView;
 import com.destro13.reutersnews.util.StringParser;
 
 import java.util.List;
@@ -20,7 +21,7 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
-public class NewsActivity extends AppCompatActivity implements SwipeRefreshLayout.OnRefreshListener {
+public class NewsActivity extends AppCompatActivity implements NewsView, SwipeRefreshLayout.OnRefreshListener {
     static final String API_KEY = "f2df02200e4e4a8d9f1ee75a00cd79fd";
     private NewsService mNewsService;
     private NewsReport mNewsReport;
@@ -45,57 +46,57 @@ public class NewsActivity extends AppCompatActivity implements SwipeRefreshLayou
 
         mNewsService = ApiController.getApi();
 
-        mRecyclerView.setOnScrollListener(new RecyclerView.OnScrollListener() {
-            @Override
-            public void onScrollStateChanged(RecyclerView recyclerView, int newState) {
-                super.onScrollStateChanged(recyclerView, newState);
-            }
+//        mRecyclerView.setOnScrollListener(new RecyclerView.OnScrollListener() {
+//            @Override
+//            public void onScrollStateChanged(RecyclerView recyclerView, int newState) {
+//                super.onScrollStateChanged(recyclerView, newState);
+//            }
+//
+//            @Override
+//            public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
+//                super.onScrolled(recyclerView, dx, dy);
+//                if(dy > 0){
+//                    final List<Article> tempArticles = mNewsReport.getArticles();
+//                    mNewsReport.setArticles(tempArticles);
+//
+//                    mNewsService.getData("reuters","top",API_KEY).enqueue(new Callback<NewsReport>() {
+//                        @Override
+//                        public void onResponse(Call<NewsReport> call, Response<NewsReport> response) {
+//                            tempArticles.addAll(setParsedDate(response.body()).getArticles());
+//                            mNewsAdapter.setData(tempArticles);
+//                        }
+//
+//                        @Override
+//                        public void onFailure(Call<NewsReport> call, Throwable t) {
+//
+//                        }
+//                    });
+//                }
+//            }
+//        });
 
-            @Override
-            public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
-                super.onScrolled(recyclerView, dx, dy);
-                if(dy > 0){
-                    final List<Article> tempArticles = mNewsReport.getArticles();
-                    mNewsReport.setArticles(tempArticles);
-
-                    mNewsService.getData("reuters","top",API_KEY).enqueue(new Callback<NewsReport>() {
-                        @Override
-                        public void onResponse(Call<NewsReport> call, Response<NewsReport> response) {
-                            tempArticles.addAll(setParsedDate(response.body()).getArticles());
-                            mNewsAdapter.setData(tempArticles);
-                        }
-
-                        @Override
-                        public void onFailure(Call<NewsReport> call, Throwable t) {
-
-                        }
-                    });
-                }
-            }
-        });
-
-        mNewsService.getData("reuters","latest", API_KEY).enqueue(new Callback<NewsReport>() {
-            @Override
-            public void onResponse(Call<NewsReport> call, Response<NewsReport> response) {
-                mNewsReport = setParsedDate(response.body());
-                mNewsReport.setArticles(mNewsReport.getArticles());
-
-                mNewsAdapter = new NewsAdapter(mNewsReport.getArticles(),NewsActivity.this);
-                mRecyclerView.setAdapter(mNewsAdapter);
-
-                RecyclerSectionItemDecoration mRecyclerSectionItemDecoration =
-                        new RecyclerSectionItemDecoration(
-                                getResources().getDimensionPixelSize(R.dimen.recycler_section_header_height),
-                                true,
-                                getSectionCallback(mNewsReport.getArticles()));
-                mRecyclerView.addItemDecoration(mRecyclerSectionItemDecoration);
-            }
-
-            @Override
-            public void onFailure(Call<NewsReport> call, Throwable t) {
-                t.printStackTrace();
-            }
-        });
+//        mNewsService.getData("reuters","latest", API_KEY).enqueue(new Callback<NewsReport>() {
+//            @Override
+//            public void onResponse(Call<NewsReport> call, Response<NewsReport> response) {
+//                mNewsReport = setParsedDate(response.body());
+//                mNewsReport.setArticles(mNewsReport.getArticles());
+//
+//                mNewsAdapter = new NewsAdapter(mNewsReport.getArticles(),NewsActivity.this);
+//                mRecyclerView.setAdapter(mNewsAdapter);
+//
+//                RecyclerSectionItemDecoration mRecyclerSectionItemDecoration =
+//                        new RecyclerSectionItemDecoration(
+//                                getResources().getDimensionPixelSize(R.dimen.recycler_section_header_height),
+//                                true,
+//                                getSectionCallback(mNewsReport.getArticles()));
+//                mRecyclerView.addItemDecoration(mRecyclerSectionItemDecoration);
+//            }
+//
+//            @Override
+//            public void onFailure(Call<NewsReport> call, Throwable t) {
+//                t.printStackTrace();
+//            }
+//        });
 
     }
 
@@ -108,27 +109,27 @@ public class NewsActivity extends AppCompatActivity implements SwipeRefreshLayou
 
     @Override
     public void onRefresh() {
-        mNewsService.getData("reuters","latest", API_KEY).enqueue(new Callback<NewsReport>() {
-            @Override
-            public void onResponse(Call<NewsReport> call, Response<NewsReport> response) {
-                mNewsReport = setParsedDate(response.body());
-                mNewsAdapter.setData(mNewsReport.getArticles());
+//        mNewsService.getData("reuters","latest", API_KEY).enqueue(new Callback<NewsReport>() {
+//            @Override
+//            public void onResponse(Call<NewsReport> call, Response<NewsReport> response) {
+//                mNewsReport = setParsedDate(response.body());
+//                mNewsAdapter.setData(mNewsReport.getArticles());
+//
+//                mRecyclerView.removeItemDecoration(mRecyclerSectionItemDecoration);
+//                mRecyclerSectionItemDecoration =
+//                        new RecyclerSectionItemDecoration(
+//                                getResources().getDimensionPixelSize(R.dimen.recycler_section_header_height),
+//                                true,
+//                                getSectionCallback(mNewsReport.getArticles()));
+//                mRecyclerView.addItemDecoration(mRecyclerSectionItemDecoration);
+//
+//            }
 
-                mRecyclerView.removeItemDecoration(mRecyclerSectionItemDecoration);
-                mRecyclerSectionItemDecoration =
-                        new RecyclerSectionItemDecoration(
-                                getResources().getDimensionPixelSize(R.dimen.recycler_section_header_height),
-                                true,
-                                getSectionCallback(mNewsReport.getArticles()));
-                mRecyclerView.addItemDecoration(mRecyclerSectionItemDecoration);
-
-            }
-
-            @Override
-            public void onFailure(Call<NewsReport> call, Throwable t) {
-                Toast.makeText(getApplicationContext(),"Network error!", Toast.LENGTH_SHORT);
-            }
-        });
+//            @Override
+//            public void onFailure(Call<NewsReport> call, Throwable t) {
+//                Toast.makeText(getApplicationContext(),"Network error!", Toast.LENGTH_SHORT);
+//            }
+//        });
 
         mSwipeRefreshLayout.setRefreshing(true);
 
