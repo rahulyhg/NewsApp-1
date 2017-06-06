@@ -1,8 +1,8 @@
-package com.destro13.reutersnews.apireuters;
+package com.destro13.reutersnews.apinews;
 
 import com.destro13.reutersnews.model.NewsReport;
-
-import java.util.List;
+import com.destro13.reutersnews.model.Source;
+import com.destro13.reutersnews.model.SourceReport;
 
 import retrofit2.Call;
 import retrofit2.http.GET;
@@ -15,4 +15,6 @@ import retrofit2.http.Query;
 public interface NewsService {
     @GET("/v1/articles")
     Call<NewsReport> getData(@Query("source") String source, @Query("sortBy") String sortBy, @Query("apiKey") String apiKey);
+    @GET("/v1/sourses")
+    Call<SourceReport> getSources();
 }

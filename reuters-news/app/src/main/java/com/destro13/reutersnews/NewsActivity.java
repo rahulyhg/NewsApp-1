@@ -5,10 +5,11 @@ import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.widget.Toast;
 
 import com.destro13.reutersnews.adapter.NewsAdapter;
-import com.destro13.reutersnews.apireuters.ApiController;
-import com.destro13.reutersnews.apireuters.NewsService;
+import com.destro13.reutersnews.apinews.ApiController;
+import com.destro13.reutersnews.apinews.NewsService;
 import com.destro13.reutersnews.model.Article;
 import com.destro13.reutersnews.model.NewsReport;
 import com.destro13.reutersnews.util.StringParser;
@@ -19,12 +20,13 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
-public class MainActivity extends AppCompatActivity implements SwipeRefreshLayout.OnRefreshListener {
+public class NewsActivity extends AppCompatActivity implements SwipeRefreshLayout.OnRefreshListener {
     static final String API_KEY = "f2df02200e4e4a8d9f1ee75a00cd79fd";
     private NewsService mNewsService;
     private NewsReport mNewsReport;
     private RecyclerView mRecyclerView;
     private SwipeRefreshLayout mSwipeRefreshLayout;
+    RecyclerSectionItemDecoration mRecyclerSectionItemDecoration;
 
     private NewsAdapter mNewsAdapter;
 
@@ -76,17 +78,17 @@ public class MainActivity extends AppCompatActivity implements SwipeRefreshLayou
             @Override
             public void onResponse(Call<NewsReport> call, Response<NewsReport> response) {
                 mNewsReport = setParsedDate(response.body());
-                mNewsReport.setArticles(setFakeObjects(mNewsReport.getArticles()));
+                mNewsReport.setArticles(mNewsReport.getArticles());
 
-                mNewsAdapter = new NewsAdapter(mNewsReport.getArticles(),MainActivity.this);
+                mNewsAdapter = new NewsAdapter(mNewsReport.getArticles(),NewsActivity.this);
                 mRecyclerView.setAdapter(mNewsAdapter);
 
-                RecyclerSectionItemDecoration sectionItemDecoration =
+                RecyclerSectionItemDecoration mRecyclerSectionItemDecoration =
                         new RecyclerSectionItemDecoration(
                                 getResources().getDimensionPixelSize(R.dimen.recycler_section_header_height),
                                 true,
                                 getSectionCallback(mNewsReport.getArticles()));
-                mRecyclerView.addItemDecoration(sectionItemDecoration);
+                mRecyclerView.addItemDecoration(mRecyclerSectionItemDecoration);
             }
 
             @Override
@@ -111,11 +113,20 @@ public class MainActivity extends AppCompatActivity implements SwipeRefreshLayou
             public void onResponse(Call<NewsReport> call, Response<NewsReport> response) {
                 mNewsReport = setParsedDate(response.body());
                 mNewsAdapter.setData(mNewsReport.getArticles());
+
+                mRecyclerView.removeItemDecoration(mRecyclerSectionItemDecoration);
+                mRecyclerSectionItemDecoration =
+                        new RecyclerSectionItemDecoration(
+                                getResources().getDimensionPixelSize(R.dimen.recycler_section_header_height),
+                                true,
+                                getSectionCallback(mNewsReport.getArticles()));
+                mRecyclerView.addItemDecoration(mRecyclerSectionItemDecoration);
+
             }
 
             @Override
             public void onFailure(Call<NewsReport> call, Throwable t) {
-                t.printStackTrace();
+                Toast.makeText(getApplicationContext(),"Network error!", Toast.LENGTH_SHORT);
             }
         });
 

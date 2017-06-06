@@ -1,4 +1,4 @@
-package com.destro13.reutersnews.apireuters;
+package com.destro13.reutersnews.apinews;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;

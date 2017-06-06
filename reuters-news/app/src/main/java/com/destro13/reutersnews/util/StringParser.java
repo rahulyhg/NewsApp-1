@@ -11,10 +11,11 @@ import java.util.Locale;
  * Created by pavlyknazariy on 30.05.17.
  */
 
-public class StringParser {
+public final class StringParser {
     private StringParser(){
         throw new AssertionError();
     }
+
 
     public static String parseDate(String in){
         String out = in.substring(0,10);
@@ -40,6 +41,14 @@ public class StringParser {
         String outString = outFormat.format(date.getTime());
 
         return outString;
+    }
+
+    public static String transformUrlToImage(String url){
+        String head = url.substring(0,4);
+        if(!head.equals("http"))
+            return "http:" + url;
+        else
+            return url;
     }
 
 

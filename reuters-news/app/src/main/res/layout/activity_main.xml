@@ -8,7 +8,7 @@
     android:orientation="vertical"
     android:paddingLeft="20dp"
     android:paddingRight="20dp"
-    tools:context="com.destro13.reutersnews.MainActivity">
+    tools:context="com.destro13.reutersnews.NewsActivity">
 
     <!--<TextView-->
         <!--android:id="@+id/date_textView"-->
@@ -56,7 +56,7 @@
             android:id="@+id/refresh"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            tools:context="com.destro13.reutersnews.MainActivity">
+            tools:context="com.destro13.reutersnews.NewsActivity">
 
                      <android.support.v7.widget.RecyclerView
                         android:id="@+id/reuters_news_recycler_view"

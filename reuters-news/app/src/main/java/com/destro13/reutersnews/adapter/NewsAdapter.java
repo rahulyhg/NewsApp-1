@@ -12,6 +12,7 @@ import android.widget.TextView;
 
 import com.destro13.reutersnews.R;
 import com.destro13.reutersnews.model.Article;
+import com.destro13.reutersnews.util.StringParser;
 import com.squareup.picasso.Picasso;
 
 import java.util.Collections;
@@ -48,7 +49,7 @@ public class NewsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>  
             if(holder instanceof NewsHolder){
             Article article = mArticles.get(position);
             Picasso.with(mContext)
-                    .load("http:" + (mArticles.get(position).getUrlToImage()))
+                    .load(StringParser.transformUrlToImage(mArticles.get(position).getUrlToImage()))
                     .into(((NewsHolder) holder).itemImageView);
 
             ((NewsHolder) holder).titleTextView.setText(article.getTitle());
