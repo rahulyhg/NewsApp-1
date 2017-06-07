@@ -6,4 +6,5 @@ package com.destro13.reutersnews.mvp.presenter;
 
 public interface NewsPresenter extends Presenter {
     void getNews();
+    void getAdditionalNews();
 }

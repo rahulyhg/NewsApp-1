@@ -1,5 +1,8 @@
 package com.destro13.reutersnews.util;
 
+import com.destro13.reutersnews.model.Article;
+import com.destro13.reutersnews.model.NewsReport;
+
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -41,6 +44,13 @@ public final class StringParser {
         String outString = outFormat.format(date.getTime());
 
         return outString;
+    }
+
+    public static NewsReport setParsedDate(NewsReport newsReport){
+        for (Article article : newsReport.getArticles()) {
+            article.setPublishedAt(StringParser.setDateInFormat(StringParser.parseDate(article.getPublishedAt())));
+        }
+        return newsReport;
     }
 
     public static String transformUrlToImage(String url){
