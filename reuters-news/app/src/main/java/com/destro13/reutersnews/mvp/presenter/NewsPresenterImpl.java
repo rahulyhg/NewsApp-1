@@ -23,10 +23,12 @@ public class NewsPresenterImpl implements NewsPresenter {
     private NewsModel mNewsModel = new NewsModelImpl();
 
     private NewsReport mNewsReport;
+    private String mSource;
 
     private Subscription subscription = Subscriptions.empty();
 
     private NewsView mNewsView;
+
 
 
     public NewsPresenterImpl(NewsView view) {
@@ -34,12 +36,14 @@ public class NewsPresenterImpl implements NewsPresenter {
     }
 
     @Override
-    public void getNews() {
+    public void getNews(String source) {
+        mSource = source;
+
         if (!subscription.isUnsubscribed()) {
             subscription.unsubscribe();
         }
 
-        subscription = mNewsModel.getData("reuters","latest", API_KEY)
+        subscription = mNewsModel.getData(source,"top", API_KEY)
                 .subscribe(new Observer<NewsReport>() {
                     @Override
                     public void onCompleted() {
@@ -66,7 +70,7 @@ public class NewsPresenterImpl implements NewsPresenter {
             subscription.unsubscribe();
         }
 
-        final NewsModel newsModel = new NewsModelImpl();
+        NewsModel newsModel = new NewsModelImpl();
 
         subscription = newsModel.getData("reuters","latest", API_KEY)
                 .subscribe(new Observer<NewsReport>() {

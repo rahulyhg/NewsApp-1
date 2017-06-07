@@ -1,5 +1,6 @@
 package com.destro13.reutersnews;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AppCompatActivity;
@@ -7,12 +8,12 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 
 import com.destro13.reutersnews.adapter.NewsAdapter;
-import com.destro13.reutersnews.apinews.NewsService;
 import com.destro13.reutersnews.model.Article;
 import com.destro13.reutersnews.model.NewsReport;
 import com.destro13.reutersnews.mvp.presenter.NewsPresenter;
 import com.destro13.reutersnews.mvp.presenter.NewsPresenterImpl;
 import com.destro13.reutersnews.mvp.view.NewsView;
+import com.destro13.reutersnews.recyclerdecoration.RecyclerSectionItemDecoration;
 import com.destro13.reutersnews.util.StringParser;
 
 import java.util.List;
@@ -32,6 +33,8 @@ public class NewsActivity extends AppCompatActivity implements NewsView, SwipeRe
 
     private NewsAdapter mNewsAdapter;
 
+    private String mSource;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -46,9 +49,13 @@ public class NewsActivity extends AppCompatActivity implements NewsView, SwipeRe
         mSwipeRefreshLayout.setOnRefreshListener(this);
 
         mNewsPresenter = new NewsPresenterImpl(this);
-        mNewsPresenter.getNews();
 
+        Intent intent = getIntent();
+        mSource = intent.getStringExtra("source");
 
+        mNewsPresenter.getNews(mSource);
+
+        //TO DO: replace deprecated
         mRecyclerView.setOnScrollListener(new RecyclerView.OnScrollListener() {
             @Override
             public void onScrollStateChanged(RecyclerView recyclerView, int newState) {
@@ -68,7 +75,7 @@ public class NewsActivity extends AppCompatActivity implements NewsView, SwipeRe
 
     @Override
     public void onRefresh() {
-        mNewsPresenter.getNews();
+        mNewsPresenter.getNews(mSource);
         mSwipeRefreshLayout.setRefreshing(true);
 
         mSwipeRefreshLayout.postDelayed(new Runnable() {
@@ -112,8 +119,6 @@ public class NewsActivity extends AppCompatActivity implements NewsView, SwipeRe
     public void setNews(NewsReport newsReport) {
                 mNewsAdapter = new NewsAdapter(StringParser.setParsedDate(newsReport).getArticles(),NewsActivity.this);
                 mRecyclerView.setAdapter(mNewsAdapter);
-
-                //mNewsReport.setArticles(newsReport.getArticles());
 
                 RecyclerSectionItemDecoration mRecyclerSectionItemDecoration =
                         new RecyclerSectionItemDecoration(

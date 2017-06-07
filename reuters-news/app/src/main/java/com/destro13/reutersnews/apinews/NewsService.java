@@ -16,6 +16,6 @@ import rx.Observable;
 public interface NewsService {
     @GET("/v1/articles")
     Observable<NewsReport> getData(@Query("source") String source, @Query("sortBy") String sortBy, @Query("apiKey") String apiKey);
-    @GET("/v1/sourses")
-    Call<SourceReport> getSources();
+    @GET("/v1/sources")
+    Observable<SourceReport> getSources();
 }

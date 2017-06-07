@@ -53,6 +53,11 @@ public final class StringParser {
         return newsReport;
     }
 
+    public static String transformSourceId(String id){
+        return id.replace("-","_");
+    }
+
+
     public static String transformUrlToImage(String url){
         String head = url.substring(0,4);
         if(!head.equals("http"))
