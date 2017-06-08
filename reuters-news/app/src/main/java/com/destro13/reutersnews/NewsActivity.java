@@ -52,7 +52,7 @@ public class NewsActivity extends AppCompatActivity implements NewsView, SwipeRe
 
         Intent intent = getIntent();
         mSource = intent.getStringExtra("source");
-
+ 
 
         //FAIL: Entertaiment, Financial Times, Fortune,
         //      Handelsblatt, The Next Web,
