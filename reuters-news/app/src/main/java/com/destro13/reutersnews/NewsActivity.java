@@ -53,23 +53,28 @@ public class NewsActivity extends AppCompatActivity implements NewsView, SwipeRe
         Intent intent = getIntent();
         mSource = intent.getStringExtra("source");
 
+
+        //FAIL: Entertaiment, Financial Times, Fortune,
+        //      Handelsblatt, The Next Web,
+        // LATEST: DerTegesspiel, DieZeit, Wirtschafts Woche
+        //LOADED WITH ERROR: HeckerNews, NewsWeek, Reddit, WallStreetJournal,
         mNewsPresenter.getNews(mSource);
 
         //TO DO: replace deprecated
-        mRecyclerView.setOnScrollListener(new RecyclerView.OnScrollListener() {
-            @Override
-            public void onScrollStateChanged(RecyclerView recyclerView, int newState) {
-                super.onScrollStateChanged(recyclerView, newState);
-            }
-
-            @Override
-            public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
-                super.onScrolled(recyclerView, dx, dy);
-                if(dy > 0){
-                    mNewsPresenter.getAdditionalNews();
-                }
-            }
-        });
+//        mRecyclerView.setOnScrollListener(new RecyclerView.OnScrollListener() {
+//            @Override
+//            public void onScrollStateChanged(RecyclerView recyclerView, int newState) {
+//                super.onScrollStateChanged(recyclerView, newState);
+//            }
+//
+//            @Override
+//            public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
+//                super.onScrolled(recyclerView, dx, dy);
+//                if(dy > 0){
+//                    mNewsPresenter.getAdditionalNews();
+//                }
+//            }
+//        });
 
     }
 
