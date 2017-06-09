@@ -2,6 +2,7 @@ package com.destro13.reutersnews.adapter;
 
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -12,10 +13,14 @@ import android.widget.TextView;
 
 import com.destro13.reutersnews.R;
 import com.destro13.reutersnews.model.Article;
+import com.destro13.reutersnews.util.StringParser;
 import com.squareup.picasso.Picasso;
 
 import java.util.Collections;
 import java.util.List;
+
+import butterknife.BindView;
+import butterknife.ButterKnife;
 
 /**
  * Created by pavlyknazariy on 25.05.17.
@@ -48,7 +53,7 @@ public class NewsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>  
             if(holder instanceof NewsHolder){
             Article article = mArticles.get(position);
             Picasso.with(mContext)
-                    .load("http:" + (mArticles.get(position).getUrlToImage()))
+                    .load(StringParser.transformUrlToImage(mArticles.get(position).getUrlToImage()))
                     .into(((NewsHolder) holder).itemImageView);
 
             ((NewsHolder) holder).titleTextView.setText(article.getTitle());
@@ -65,7 +70,6 @@ public class NewsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>  
             ((NewsHolder) holder).itemImageView.setOnClickListener(openInBrowser);
         }
 
-
     }
 
     @Override
@@ -74,13 +78,16 @@ public class NewsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>  
     }
 
     class NewsHolder extends RecyclerView.ViewHolder{
-        private ImageView itemImageView;
-        private TextView  titleTextView;
+        @BindView(R.id.news_image_item)
+        ImageView itemImageView;
+        @BindView(R.id.title_textView)
+        TextView  titleTextView;
 
         public NewsHolder(View itemView) {
             super(itemView);
-            itemImageView = (ImageView) itemView.findViewById(R.id.news_image_item);
-            titleTextView = (TextView) itemView.findViewById(R.id.title_textView);
+            ButterKnife.bind(this,itemView);
+//            itemImageView = (ImageView) itemView.findViewById(R.id.news_image_item);
+//            titleTextView = (TextView) itemView.findViewById(R.id.title_textView);
         }
     }
 
