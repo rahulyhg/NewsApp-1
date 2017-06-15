@@ -11,11 +11,14 @@ import android.widget.TextView;
 
 import com.destro13.reutersnews.NewsActivity;
 import com.destro13.reutersnews.R;
-import com.destro13.reutersnews.model.Source;
+import com.destro13.reutersnews.mvp.model.Source;
 import com.destro13.reutersnews.util.StringParser;
 
 import java.util.Collections;
 import java.util.List;
+
+import butterknife.BindView;
+import butterknife.ButterKnife;
 
 
 /**
@@ -26,15 +29,11 @@ public class SourceAdapter extends RecyclerView.Adapter<SourceAdapter.SourceHold
     private List<Source> mSources = Collections.emptyList();
     private Context mContext;
 
-    Intent mIntent;
-    Source source;
-
-    public SourceAdapter(List<Source> sources, Context context) {
-        mSources = sources;
+    public SourceAdapter(Context context) {
         mContext = context;
     }
 
-    public void setData(List<Source> sources){
+    public void setData(List<Source> sources) {
         this.mSources = sources;
         notifyDataSetChanged();
     }
@@ -42,29 +41,24 @@ public class SourceAdapter extends RecyclerView.Adapter<SourceAdapter.SourceHold
     @Override
     public SourceHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         LayoutInflater layoutInflater = LayoutInflater.from(parent.getContext());
-        View view = layoutInflater .inflate(R.layout.source_item, parent, false);
+        View view = layoutInflater.inflate(R.layout.source_item, parent, false);
         return new SourceAdapter.SourceHolder(view);
     }
 
     @Override
     public void onBindViewHolder(SourceHolder holder, final int position) {
-        source = mSources.get(position);
-
-        holder.sourceTitleTextView.setText(source.getName());
-
-        int id = mContext.getResources().getIdentifier(StringParser.transformSourceId(source.getId()), "drawable", mContext.getPackageName());
-
-        holder.sourceLogoImageView.setImageResource(id);
-
-        mIntent = new Intent(mContext, NewsActivity.class);
+        holder.sourceTitleTextView.setText(mSources.get(position).getName());
+        holder.sourceLogoImageView.setImageResource(
+                mContext.getResources().getIdentifier(StringParser.transformSourceId(mSources.get(position).getId()),
+                        "drawable",
+                        mContext.getPackageName()));
         holder.sourceLogoImageView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                mIntent.putExtra("source", mSources.get(position).getId());
-                mContext.startActivity(mIntent);
+                mContext.startActivity(new Intent(mContext, NewsActivity.class)
+                        .putExtra("source", mSources.get(position).getId()));
             }
         });
-
     }
 
     @Override
@@ -72,17 +66,15 @@ public class SourceAdapter extends RecyclerView.Adapter<SourceAdapter.SourceHold
         return mSources.size();
     }
 
-
-    class SourceHolder extends RecyclerView.ViewHolder{
-        private ImageView sourceLogoImageView;
-        private TextView  sourceTitleTextView;
-        
+    class SourceHolder extends RecyclerView.ViewHolder {
+        @BindView(R.id.source_logo_image_item)
+        ImageView sourceLogoImageView;
+        @BindView(R.id.source_title_textView)
+        TextView sourceTitleTextView;
 
         public SourceHolder(View itemView) {
             super(itemView);
-            sourceLogoImageView = (ImageView)itemView.findViewById(R.id.source_logo_image_item);
-            sourceTitleTextView = (TextView) itemView.findViewById(R.id.source_title_textView);
+            ButterKnife.bind(this, itemView);
         }
     }
-
 }

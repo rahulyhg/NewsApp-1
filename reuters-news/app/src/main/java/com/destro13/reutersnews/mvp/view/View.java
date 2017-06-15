@@ -5,4 +5,5 @@ package com.destro13.reutersnews.mvp.view;
  */
 
 public interface View {
+    void showError(String error);
 }
