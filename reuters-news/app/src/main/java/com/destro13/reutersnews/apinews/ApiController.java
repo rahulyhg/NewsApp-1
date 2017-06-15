@@ -26,8 +26,6 @@ public class ApiController {
                 .build();
 
 
-        NewsService nbuService = retrofit.create(NewsService.class);
-        return nbuService;
-
+        return retrofit.create(NewsService.class);
     }
 }

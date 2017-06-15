@@ -1,10 +1,8 @@
 package com.destro13.reutersnews.apinews;
 
-import com.destro13.reutersnews.model.NewsReport;
-import com.destro13.reutersnews.model.Source;
-import com.destro13.reutersnews.model.SourceReport;
+import com.destro13.reutersnews.mvp.model.NewsReport;
+import com.destro13.reutersnews.mvp.model.SourceReport;
 
-import retrofit2.Call;
 import retrofit2.http.GET;
 import retrofit2.http.Query;
 import rx.Observable;
