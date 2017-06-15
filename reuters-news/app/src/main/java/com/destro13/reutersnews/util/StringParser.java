@@ -1,7 +1,7 @@
 package com.destro13.reutersnews.util;
 
-import com.destro13.reutersnews.model.Article;
-import com.destro13.reutersnews.model.NewsReport;
+import com.destro13.reutersnews.mvp.model.Article;
+import com.destro13.reutersnews.mvp.model.NewsReport;
 
 import java.text.DateFormat;
 import java.text.ParseException;

@@ -1,5 +1,5 @@
 
-package com.destro13.reutersnews.model;
+package com.destro13.reutersnews.mvp.model;
 
 import java.util.List;
 import com.google.gson.annotations.Expose;
