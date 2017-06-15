@@ -5,6 +5,7 @@ import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.widget.Toast;
 
 import com.destro13.reutersnews.adapter.NewsAdapter;
 import com.destro13.reutersnews.mvp.model.Article;
@@ -35,9 +36,7 @@ public class NewsActivity extends AppCompatActivity implements NewsView, SwipeRe
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         ButterKnife.bind(this);
-
         initRecyclerView();
-
         mSwipeRefreshLayout.setOnRefreshListener(this);
         mNewsPresenter = new NewsPresenterImpl(this);
         mSource = getIntent().getStringExtra("source");
@@ -95,6 +94,12 @@ public class NewsActivity extends AppCompatActivity implements NewsView, SwipeRe
 
     @Override
     public void showError(String error) {
+        Toast.makeText(this, error, Toast.LENGTH_SHORT).show();
+    }
 
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        mNewsPresenter.unsubscribeCurrentSubscription();
     }
 }

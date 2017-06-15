@@ -56,4 +56,9 @@ public class NewsPresenterImpl implements NewsPresenter {
                             }
                         });
     }
+
+    @Override
+    public void unsubscribeCurrentSubscription() {
+        subscription.unsubscribe();
+    }
 }

@@ -52,4 +52,9 @@ public class SourcePresenterImpl implements SourcePresenter {
                     }
                 });
     }
+
+    @Override
+    public void unsubscribeCurrentSubscription() {
+        subscription.unsubscribe();
+    }
 }

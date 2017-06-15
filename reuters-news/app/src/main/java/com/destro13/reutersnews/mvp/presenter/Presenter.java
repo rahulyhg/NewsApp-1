@@ -5,4 +5,5 @@ package com.destro13.reutersnews.mvp.presenter;
  */
 
 public interface Presenter {
+    void unsubscribeCurrentSubscription();
 }

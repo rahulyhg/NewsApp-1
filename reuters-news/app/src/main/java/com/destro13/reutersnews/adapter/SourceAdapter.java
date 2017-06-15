@@ -29,8 +29,7 @@ public class SourceAdapter extends RecyclerView.Adapter<SourceAdapter.SourceHold
     private List<Source> mSources = Collections.emptyList();
     private Context mContext;
 
-    public SourceAdapter(List<Source> sources, Context context) {
-        mSources = sources;
+    public SourceAdapter(Context context) {
         mContext = context;
     }
 
